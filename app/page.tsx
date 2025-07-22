@@ -1,7 +1,6 @@
 "use client"
 
 import type React from "react"
-
 import { useState, useEffect } from "react"
 
 interface BenchmarkData {
@@ -143,6 +142,15 @@ interface ChartProps {
   animated: boolean
 }
 
+// Model image file mapping based on your provided filenames
+const modelImageMap: { [key: string]: string } = {
+  "GPT-4 Turbo": "/images/gpt-4 turbo.webp",
+  "Claude-3.5 Sonnet": "/images/claude.webp",
+  "Gemini Ultra": "/images/gemini.png",
+  "LLaMA-3-70B": "/images/llama.png",
+  "GPT-4": "/images/gpt 4.webp",
+}
+
 function Chart({ benchmark, animated }: ChartProps) {
   const [hoveredBar, setHoveredBar] = useState<string | null>(null)
   const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 })
@@ -241,14 +249,29 @@ function Chart({ benchmark, animated }: ChartProps) {
           })}
         </div>
 
-        {/* Model names positioned at bottom with proper spacing */}
+        {/* Model images positioned at bottom with proper spacing */}
         <div className="absolute bottom-0 left-0 right-0 flex justify-center gap-2 sm:gap-3 md:gap-4 h-12">
           {models.map((model) => (
             <div key={`${model}-name`} className="flex-1 text-center max-w-[4rem] flex items-center justify-center">
-              <div className="block sm:hidden text-xs text-gray-300 font-medium leading-tight">
+              {/* Show image on all screens, fallback to short text on error */}
+              <img
+                src={modelImageMap[model]}
+                alt={model}
+                className="h-8 w-auto mx-auto"
+                style={{ maxHeight: 32 }}
+                onError={(e) => {
+                  // fallback to text if image fails to load
+                  e.currentTarget.style.display = "none"
+                  const fallback = e.currentTarget.nextElementSibling as HTMLElement
+                  if (fallback) fallback.style.display = "block"
+                }}
+              />
+              <div
+                className="text-xs text-gray-300 font-medium leading-tight"
+                style={{ display: "none" }}
+              >
                 {getShortName(model)}
               </div>
-              <div className="hidden sm:block text-xs text-gray-300 font-medium leading-tight">{model}</div>
             </div>
           ))}
         </div>
