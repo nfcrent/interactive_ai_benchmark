@@ -314,7 +314,7 @@ export default function AIBenchmarkWidget() {
             <h2 className="text-base sm:text-lg font-semibold text-white mb-4 sm:mb-6">
               Agentic and Competitive Coding
             </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5 xl:gap-6">
               {benchmarkData["Agentic and Competitive Coding"].map((benchmark) => (
                 <Chart key={benchmark.name} benchmark={benchmark} animated={animated} />
               ))}
