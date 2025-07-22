@@ -314,7 +314,7 @@ export default function AIBenchmarkWidget() {
             <h2 className="text-base sm:text-lg font-semibold text-white mb-4 sm:mb-6">
               Agentic and Competitive Coding
             </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5 xl:gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
               {benchmarkData["Agentic and Competitive Coding"].map((benchmark) => (
                 <Chart key={benchmark.name} benchmark={benchmark} animated={animated} />
               ))}
@@ -324,7 +324,7 @@ export default function AIBenchmarkWidget() {
           {/* Tool Use Section */}
           <div className="bg-gray-800/30 rounded-lg border border-gray-700 p-3 sm:p-4 md:p-6">
             <h2 className="text-base sm:text-lg font-semibold text-white mb-4 sm:mb-6">Tool Use</h2>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
               {benchmarkData["Tool Use"].map((benchmark) => (
                 <Chart key={benchmark.name} benchmark={benchmark} animated={animated} />
               ))}
@@ -334,7 +334,7 @@ export default function AIBenchmarkWidget() {
           {/* Math & STEM Section */}
           <div className="bg-gray-800/30 rounded-lg border border-gray-700 p-3 sm:p-4 md:p-6">
             <h2 className="text-base sm:text-lg font-semibold text-white mb-4 sm:mb-6">Math & STEM</h2>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
               {benchmarkData["Math & STEM"].map((benchmark) => (
                 <Chart key={benchmark.name} benchmark={benchmark} animated={animated} />
               ))}
