@@ -140,10 +140,9 @@ function Tooltip({ model, score, x, y, visible }: TooltipProps) {
 interface ChartProps {
   benchmark: BenchmarkData
   animated: boolean
-  wide?: boolean // NEW
+  wide?: boolean
 }
 
-// Model image file mapping based on your provided filenames
 const modelImageMap: { [key: string]: string } = {
   "GPT-4 Turbo": "/images/gpt-4 turbo.webp",
   "Claude-3.5 Sonnet": "/images/claude.webp",
@@ -172,7 +171,6 @@ function Chart({ benchmark, animated, wide }: ChartProps) {
     setHoveredBar(null)
   }
 
-  // Function to get shortened model name for mobile
   const getShortName = (model: string) => {
     switch (model) {
       case "GPT-4 Turbo":
@@ -195,7 +193,7 @@ function Chart({ benchmark, animated, wide }: ChartProps) {
   return (
     <div
       className={`bg-gray-800/50 rounded-lg p-3 sm:p-4 border border-gray-700 flex flex-col items-center
-        ${wide ? "col-span-1 sm:col-span-2 xl:col-span-3 w-full" : ""}`}
+        ${wide ? "xl:col-span-2 w-full" : ""}`}
       style={wide ? { minWidth: 0 } : {}}
     >
       <h3 className="text-xs sm:text-sm font-medium text-gray-200 mb-4 leading-tight text-center">{benchmark.name}</h3>
@@ -291,28 +289,15 @@ export default function AIBenchmarkWidget() {
     return () => clearTimeout(timer)
   }, [])
 
-  // Helper to mark OJBench as wide, and fill empty grid spots for symmetry
-  const agenticBenchmarks = benchmarkData["Agentic and Competitive Coding"].map((b, i, arr) =>
-    b.name === "OJBench"
-      ? { ...b, wide: true }
-      : { ...b, wide: false }
+  // Mark OJBench as wide
+  const agenticBenchmarks = benchmarkData["Agentic and Competitive Coding"].map((b) =>
+    b.name === "OJBench" ? { ...b, wide: true } : { ...b, wide: false }
   )
   const toolBenchmarks = benchmarkData["Tool Use"]
   const mathBenchmarks = benchmarkData["Math & STEM"]
 
-  // Fillers for consistent grid (so last row has 3 items)
-  function gridFillers(arr: any[], wideIdx: number | null = null) {
-    const items = arr.length
-    if (items === 4 && wideIdx !== null) return [null, null] // 2 grid gaps for 1 wide
-    if (items % 3 === 0) return []
-    if (items % 3 === 1) return [null, null]
-    if (items % 3 === 2) return [null]
-    return []
-  }
-
   return (
     <div className="min-h-screen bg-slate-900 relative overflow-hidden flex flex-col items-center">
-      {/* Dotted grid background */}
       <div
         className="absolute inset-0 opacity-20"
         style={{
@@ -328,16 +313,12 @@ export default function AIBenchmarkWidget() {
             <h2 className="text-base sm:text-lg font-semibold text-white mb-4 sm:mb-6 text-center">
               Agentic and Competitive Coding
             </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 w-full justify-items-center">
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-2 gap-6 w-full justify-items-center">
               <Chart key={agenticBenchmarks[0].name} benchmark={agenticBenchmarks[0]} animated={animated} />
               <Chart key={agenticBenchmarks[1].name} benchmark={agenticBenchmarks[1]} animated={animated} />
               <Chart key={agenticBenchmarks[2].name} benchmark={agenticBenchmarks[2]} animated={animated} />
-              {/* OJBench as wide */}
+              {/* OJBench as wide, spans 2 columns on xl */}
               <Chart key={agenticBenchmarks[3].name} benchmark={agenticBenchmarks[3]} animated={animated} wide />
-              {/* Fillers for symmetry */}
-              {gridFillers(agenticBenchmarks, 3).map((_, i) => (
-                <div key={`agentic-filler-${i}`} className="hidden xl:block" />
-              ))}
             </div>
           </div>
 
@@ -346,12 +327,9 @@ export default function AIBenchmarkWidget() {
             <h2 className="text-base sm:text-lg font-semibold text-white mb-4 sm:mb-6 text-center">
               Tool Use
             </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 w-full justify-items-center">
-              {toolBenchmarks.map((benchmark, i) => (
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-2 gap-6 w-full justify-items-center">
+              {toolBenchmarks.map((benchmark) => (
                 <Chart key={benchmark.name} benchmark={benchmark} animated={animated} />
-              ))}
-              {gridFillers(toolBenchmarks).map((_, i) => (
-                <div key={`tool-filler-${i}`} className="hidden xl:block" />
               ))}
             </div>
           </div>
@@ -361,12 +339,9 @@ export default function AIBenchmarkWidget() {
             <h2 className="text-base sm:text-lg font-semibold text-white mb-4 sm:mb-6 text-center">
               Math & STEM
             </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 w-full justify-items-center">
-              {mathBenchmarks.map((benchmark, i) => (
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-2 gap-6 w-full justify-items-center">
+              {mathBenchmarks.map((benchmark) => (
                 <Chart key={benchmark.name} benchmark={benchmark} animated={animated} />
-              ))}
-              {gridFillers(mathBenchmarks).map((_, i) => (
-                <div key={`math-filler-${i}`} className="hidden xl:block" />
               ))}
             </div>
           </div>
