@@ -181,58 +181,77 @@ function Chart({ benchmark, animated }: ChartProps) {
     }
   }
 
+  const CHART_HEIGHT = 160
+
   return (
     <div className="bg-gray-800/50 rounded-lg p-3 sm:p-4 border border-gray-700">
-      <h3 className="text-xs sm:text-sm font-medium text-gray-200 mb-3 sm:mb-4 leading-tight">{benchmark.name}</h3>
-      <div className="flex items-end justify-center gap-1 sm:gap-2 md:gap-3 h-32 sm:h-40 md:h-48">
-        {models.map((model) => {
-          const score = benchmark.scores[model]
-          // 🔄 REPLACE THIS LINE
-          // const height = (score / maxScore) * (window.innerWidth < 640 ? 100 : window.innerWidth < 768 ? 120 : 160)
+      <h3 className="text-xs sm:text-sm font-medium text-gray-200 mb-4 leading-tight">{benchmark.name}</h3>
 
-          // ✅ WITH THIS BLOCK
-          const responsiveMax = (() => {
-            if (typeof window === "undefined") return 160 // fallback during SSR
-            const w = window.innerWidth
-            return w < 640 ? 100 : w < 768 ? 120 : 160
-          })()
-          const height = (score / maxScore) * responsiveMax
-          const config = modelConfigs[model]
-          const isHovered = hoveredBar === model
+      {/* Chart area with increased height for better spacing */}
+      <div className="relative" style={{ height: `${CHART_HEIGHT + 80}px` }}>
+        {/* Score labels positioned higher up with more space */}
+        <div className="absolute top-0 left-0 right-0 flex justify-center gap-2 sm:gap-3 md:gap-4 h-8">
+          {models.map((model) => {
+            const score = benchmark.scores[model]
+            return (
+              <div key={`${model}-score`} className="flex-1 text-center max-w-[4rem] flex items-center justify-center">
+                <div className="text-xs text-gray-300 font-medium">{score}%</div>
+              </div>
+            )
+          })}
+        </div>
 
-          return (
-            <div key={model} className="flex flex-col items-center gap-1 sm:gap-2 min-w-0">
-              {/* Score label */}
-              <div className="text-xs text-gray-300 font-medium whitespace-nowrap">{score}%</div>
+        {/* Bars positioned with more space from labels */}
+        <div
+          className="absolute left-0 right-0 flex justify-center gap-2 sm:gap-3 md:gap-4"
+          style={{
+            height: `${CHART_HEIGHT}px`,
+            top: "32px", // More space from percentage labels
+            bottom: "48px", // Space for model names
+          }}
+        >
+          {models.map((model) => {
+            const score = benchmark.scores[model]
+            const height = (score / maxScore) * CHART_HEIGHT
+            const config = modelConfigs[model]
+            const isHovered = hoveredBar === model
 
-              {/* Bar */}
+            return (
               <div
-                className="w-4 sm:w-6 md:w-8 rounded-t transition-all duration-300 cursor-pointer relative"
-                style={{
-                  height: animated ? `${height}px` : "0px",
-                  backgroundColor: config.color,
-                  transform: isHovered ? "scale(1.05)" : "scale(1)",
-                  filter: isHovered ? "brightness(1.1)" : "brightness(1)",
-                }}
-                onMouseEnter={(e) => handleMouseEnter(model, e)}
-                onMouseMove={handleMouseMove}
-                onMouseLeave={handleMouseLeave}
-              />
-
-              {/* Model name - responsive text */}
-              <div className="text-center min-w-0">
-                {/* Mobile: Show short name */}
-                <div className="block sm:hidden text-xs text-gray-300 font-medium leading-tight px-1">
-                  {getShortName(model)}
-                </div>
-                {/* Desktop: Show full name */}
-                <div className="hidden sm:block text-xs text-gray-300 font-medium leading-tight text-center max-w-16 md:max-w-20">
-                  {model}
+                key={model}
+                className="flex-1 flex justify-center max-w-[4rem]"
+                style={{ height: `${CHART_HEIGHT}px` }}
+              >
+                <div className="flex items-end">
+                  <div
+                    className="w-6 sm:w-8 md:w-10 rounded-t transition-all duration-300 cursor-pointer"
+                    style={{
+                      height: animated ? `${height}px` : "0px",
+                      backgroundColor: config.color,
+                      transform: isHovered ? "scale(1.05)" : "scale(1)",
+                      filter: isHovered ? "brightness(1.1)" : "brightness(1)",
+                    }}
+                    onMouseEnter={(e) => handleMouseEnter(model, e)}
+                    onMouseMove={handleMouseMove}
+                    onMouseLeave={handleMouseLeave}
+                  />
                 </div>
               </div>
+            )
+          })}
+        </div>
+
+        {/* Model names positioned at bottom with proper spacing */}
+        <div className="absolute bottom-0 left-0 right-0 flex justify-center gap-2 sm:gap-3 md:gap-4 h-12">
+          {models.map((model) => (
+            <div key={`${model}-name`} className="flex-1 text-center max-w-[4rem] flex items-center justify-center">
+              <div className="block sm:hidden text-xs text-gray-300 font-medium leading-tight">
+                {getShortName(model)}
+              </div>
+              <div className="hidden sm:block text-xs text-gray-300 font-medium leading-tight">{model}</div>
             </div>
-          )
-        })}
+          ))}
+        </div>
       </div>
 
       <Tooltip
