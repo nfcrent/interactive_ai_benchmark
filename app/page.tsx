@@ -193,12 +193,12 @@ function Chart({ benchmark, animated }: ChartProps) {
     <div className="bg-gray-800/50 rounded-lg p-3 sm:p-4 border border-gray-700">
       <h3 className="text-xs sm:text-sm font-medium text-gray-200 mb-4 leading-tight">{benchmark.name}</h3>
       <div className="relative" style={{ height: `${CHART_HEIGHT + 80}px` }}>
-        {/* Bars with percentage labels above each bar */}
+        {/* All bars in a single row, with percentage labels at top of each bar */}
         <div
-          className="absolute left-0 right-0 flex justify-center gap-2 sm:gap-3 md:gap-4"
+          className="absolute left-0 right-0 flex items-end justify-center gap-2 sm:gap-3 md:gap-4"
           style={{
-            height: `${CHART_HEIGHT + 32}px`,
-            top: "0px",
+            height: `${CHART_HEIGHT}px`,
+            top: "32px",
             bottom: "56px",
           }}
         >
@@ -211,21 +211,22 @@ function Chart({ benchmark, animated }: ChartProps) {
             return (
               <div
                 key={model}
-                className="flex-1 flex flex-col items-center max-w-[4rem]"
-                style={{ height: `${CHART_HEIGHT + 32}px` }}
+                className="flex flex-col items-center max-w-[4rem] w-full relative"
+                style={{ height: `${CHART_HEIGHT}px` }}
               >
-                {/* Percentage label above bar, close to bar top */}
+                {/* Percentage label above bar, positioned absolutely */}
                 <div
-                  className="text-xs font-semibold"
+                  className="text-xs font-semibold absolute left-1/2"
                   style={{
+                    top: `${CHART_HEIGHT - height - 18}px`,
+                    transform: "translateX(-50%)",
                     color: "#cbd5e1",
-                    marginBottom: "2px",
-                    marginTop: `${Math.max(0, CHART_HEIGHT - height + 6)}px`, // Push label to just above top of bar
+                    pointerEvents: "none",
                   }}
                 >
                   {score}%
                 </div>
-                <div className="flex items-end" style={{ height: `${CHART_HEIGHT}px` }}>
+                <div className="flex items-end h-full">
                   <div
                     className="w-6 sm:w-8 md:w-10 rounded-t transition-all duration-300 cursor-pointer"
                     style={{
