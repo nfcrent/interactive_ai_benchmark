@@ -15,14 +15,16 @@ interface ModelConfig {
   iconBg: string
 }
 
+// Replace GPT-4 with Grok in configs
 const modelConfigs: { [key: string]: ModelConfig } = {
   "GPT-4 Turbo": { name: "GPT-4 Turbo", color: "#3B82F6", icon: "GPT", iconBg: "#10B981" },
   "Claude-3.5 Sonnet": { name: "Claude-3.5 Sonnet", color: "#6366F1", icon: "C", iconBg: "#F59E0B" },
   "Gemini Ultra": { name: "Gemini Ultra", color: "#8B5CF6", icon: "G", iconBg: "#3B82F6" },
   "LLaMA-3-70B": { name: "LLaMA-3-70B", color: "#A855F7", icon: "L", iconBg: "#3B82F6" },
-  "GPT-4": { name: "GPT-4", color: "#F59E0B", icon: "4", iconBg: "#10B981" },
+  "Grok": { name: "Grok", color: "#F59E0B", icon: "GR", iconBg: "#10B981" }, // New Grok entry
 }
 
+// Replace GPT-4 with Grok in data
 const benchmarkData = {
   "Agentic and Competitive Coding": [
     {
@@ -32,7 +34,7 @@ const benchmarkData = {
         "Claude-3.5 Sonnet": 65.8,
         "Gemini Ultra": 38.8,
         "LLaMA-3-70B": 34.4,
-        "GPT-4": 78.4,
+        "Grok": 78.4,
       },
     },
     {
@@ -42,7 +44,7 @@ const benchmarkData = {
         "Claude-3.5 Sonnet": 25.8,
         "Gemini Ultra": 20.9,
         "LLaMA-3-70B": 31.5,
-        "GPT-4": 72.5,
+        "Grok": 72.5,
       },
     },
     {
@@ -52,7 +54,7 @@ const benchmarkData = {
         "Claude-3.5 Sonnet": 51.0,
         "Gemini Ultra": 46.9,
         "LLaMA-3-70B": 37.0,
-        "GPT-4": 44.7,
+        "Grok": 44.7,
       },
     },
     {
@@ -62,7 +64,7 @@ const benchmarkData = {
         "Claude-3.5 Sonnet": 24.0,
         "Gemini Ultra": 11.3,
         "LLaMA-3-70B": 19.5,
-        "GPT-4": 19.6,
+        "Grok": 19.6,
       },
     },
   ],
@@ -74,7 +76,7 @@ const benchmarkData = {
         "Claude-3.5 Sonnet": 48.8,
         "Gemini Ultra": 37.3,
         "LLaMA-3-70B": 54.4,
-        "GPT-4": 67.6,
+        "Grok": 67.6,
       },
     },
     {
@@ -84,7 +86,7 @@ const benchmarkData = {
         "Claude-3.5 Sonnet": 72.7,
         "Gemini Ultra": 70.5,
         "LLaMA-3-70B": 80.1,
-        "GPT-4": 75.6,
+        "Grok": 75.6,
       },
     },
   ],
@@ -96,7 +98,7 @@ const benchmarkData = {
         "Claude-3.5 Sonnet": 46.7,
         "Gemini Ultra": 24.7,
         "LLaMA-3-70B": 37.0,
-        "GPT-4": 33.9,
+        "Grok": 33.9,
       },
     },
     {
@@ -106,7 +108,7 @@ const benchmarkData = {
         "Claude-3.5 Sonnet": 68.4,
         "Gemini Ultra": 62.9,
         "LLaMA-3-70B": 66.3,
-        "GPT-4": 74.9,
+        "Grok": 74.9,
       },
     },
   ],
@@ -142,12 +144,13 @@ interface ChartProps {
   animated: boolean
 }
 
+// Replace image mapping for Grok
 const modelImageMap: { [key: string]: string } = {
   "GPT-4 Turbo": "/images/gpt-4 turbo.webp",
   "Claude-3.5 Sonnet": "/images/claude.webp",
   "Gemini Ultra": "/images/gemini.png",
   "LLaMA-3-70B": "/images/llama.png",
-  "GPT-4": "/images/gpt 4.webp",
+  "Grok": "/images/grok.png",
 }
 
 function Chart({ benchmark, animated }: ChartProps) {
@@ -170,6 +173,7 @@ function Chart({ benchmark, animated }: ChartProps) {
     setHoveredBar(null)
   }
 
+  // Function to get shortened model name for mobile
   const getShortName = (model: string) => {
     switch (model) {
       case "GPT-4 Turbo":
@@ -180,8 +184,8 @@ function Chart({ benchmark, animated }: ChartProps) {
         return "Gemini"
       case "LLaMA-3-70B":
         return "LLaMA"
-      case "GPT-4":
-        return "GPT-4"
+      case "Grok":
+        return "Grok"
       default:
         return model
     }
@@ -193,22 +197,13 @@ function Chart({ benchmark, animated }: ChartProps) {
     <div className="bg-gray-800/50 rounded-lg p-3 sm:p-4 border border-gray-700">
       <h3 className="text-xs sm:text-sm font-medium text-gray-200 mb-4 leading-tight">{benchmark.name}</h3>
       <div className="relative" style={{ height: `${CHART_HEIGHT + 80}px` }}>
-        <div className="absolute top-0 left-0 right-0 flex justify-center gap-2 sm:gap-3 md:gap-4 h-8">
-          {models.map((model) => {
-            const score = benchmark.scores[model]
-            return (
-              <div key={`${model}-score`} className="flex-1 text-center max-w-[4rem] flex items-center justify-center">
-                <div className="text-xs text-gray-300 font-medium">{score}%</div>
-              </div>
-            )
-          })}
-        </div>
+        {/* Bars with percentage labels above each bar (aesthetic) */}
         <div
           className="absolute left-0 right-0 flex justify-center gap-2 sm:gap-3 md:gap-4"
           style={{
             height: `${CHART_HEIGHT}px`,
-            top: "32px",
-            bottom: "48px",
+            top: "24px",
+            bottom: "56px",
           }}
         >
           {models.map((model) => {
@@ -220,9 +215,19 @@ function Chart({ benchmark, animated }: ChartProps) {
             return (
               <div
                 key={model}
-                className="flex-1 flex justify-center max-w-[4rem]"
+                className="flex-1 flex flex-col items-center max-w-[4rem]"
                 style={{ height: `${CHART_HEIGHT}px` }}
               >
+                {/* Percentage label above bar */}
+                <div
+                  className="mb-1 text-xs font-semibold"
+                  style={{
+                    color: isHovered ? config.color : "#cbd5e1",
+                    transition: "color 0.2s",
+                  }}
+                >
+                  {score}%
+                </div>
                 <div className="flex items-end">
                   <div
                     className="w-6 sm:w-8 md:w-10 rounded-t transition-all duration-300 cursor-pointer"
@@ -231,6 +236,7 @@ function Chart({ benchmark, animated }: ChartProps) {
                       backgroundColor: config.color,
                       transform: isHovered ? "scale(1.05)" : "scale(1)",
                       filter: isHovered ? "brightness(1.1)" : "brightness(1)",
+                      boxShadow: isHovered ? "0 4px 20px " + config.color : undefined,
                     }}
                     onMouseEnter={(e) => handleMouseEnter(model, e)}
                     onMouseMove={handleMouseMove}
@@ -241,6 +247,7 @@ function Chart({ benchmark, animated }: ChartProps) {
             )
           })}
         </div>
+        {/* Model images positioned at bottom with proper spacing */}
         <div className="absolute bottom-0 left-0 right-0 flex justify-center gap-2 sm:gap-3 md:gap-4 h-12">
           {models.map((model) => (
             <div key={`${model}-name`} className="flex-1 text-center max-w-[4rem] flex items-center justify-center">
