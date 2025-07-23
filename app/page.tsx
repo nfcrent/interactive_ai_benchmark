@@ -190,7 +190,7 @@ function Chart({ benchmark, animated }: ChartProps) {
   const CHART_HEIGHT = 160
 
   return (
-    <div className="bg-gray-800/50 rounded-lg p-3 sm:p-4 border border-gray-700">
+    <div className="p-3 sm:p-4"> {/* REMOVED background and border */}
       <h3 className="text-xs sm:text-sm font-medium text-gray-200 mb-4 leading-tight">{benchmark.name}</h3>
       <div className="relative" style={{ height: `${CHART_HEIGHT + 80}px` }}>
         {/* All bars in a single row, with percentage labels at top of each bar */}
@@ -307,7 +307,7 @@ export default function AIBenchmarkWidget() {
       <div className="relative z-10 p-3 sm:p-4 md:p-6 max-w-7xl mx-auto">
         <div className="space-y-4 sm:space-y-6 md:space-y-8">
           {/* Agentic and Competitive Coding Section */}
-          <div className="bg-gray-800/30 rounded-lg border border-gray-700 p-3 sm:p-4 md:p-6">
+          <div className="p-3 sm:p-4 md:p-6 bg-gray-800/30 rounded-lg"> {/* Only background for overall section */}
             <h2 className="text-base sm:text-lg font-semibold text-white mb-4 sm:mb-6">
               Agentic and Competitive Coding
             </h2>
@@ -327,7 +327,7 @@ export default function AIBenchmarkWidget() {
           {/* Tool Use and Math & STEM Sections SIDE BY SIDE */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             {/* Tool Use Section */}
-            <div className="bg-gray-800/30 rounded-lg border border-gray-700 p-3 sm:p-4 md:p-6">
+            <div className="bg-gray-800/30 rounded-lg p-3 sm:p-4 md:p-6">
               <h2 className="text-base sm:text-lg font-semibold text-white mb-4 sm:mb-6">Tool Use</h2>
               <div className="grid grid-cols-1 gap-3 sm:gap-4">
                 {benchmarkData["Tool Use"].map((benchmark) => (
@@ -337,7 +337,7 @@ export default function AIBenchmarkWidget() {
             </div>
 
             {/* Math & STEM Section */}
-            <div className="bg-gray-800/30 rounded-lg border border-gray-700 p-3 sm:p-4 md:p-6">
+            <div className="bg-gray-800/30 rounded-lg p-3 sm:p-4 md:p-6">
               <h2 className="text-base sm:text-lg font-semibold text-white mb-4 sm:mb-6">Math & STEM</h2>
               <div className="grid grid-cols-1 gap-3 sm:gap-4">
                 {benchmarkData["Math & STEM"].map((benchmark) => (
