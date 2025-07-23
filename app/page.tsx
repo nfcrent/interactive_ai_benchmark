@@ -320,23 +320,26 @@ export default function AIBenchmarkWidget() {
             </div>
           </div>
 
-          {/* Tool Use Section */}
-          <div className="bg-gray-800/30 rounded-lg border border-gray-700 p-3 sm:p-4 md:p-6">
-            <h2 className="text-base sm:text-lg font-semibold text-white mb-4 sm:mb-6">Tool Use</h2>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
-              {benchmarkData["Tool Use"].map((benchmark) => (
-                <Chart key={benchmark.name} benchmark={benchmark} animated={animated} />
-              ))}
+          {/* Tool Use and Math & STEM Sections SIDE BY SIDE */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            {/* Tool Use Section */}
+            <div className="bg-gray-800/30 rounded-lg border border-gray-700 p-3 sm:p-4 md:p-6">
+              <h2 className="text-base sm:text-lg font-semibold text-white mb-4 sm:mb-6">Tool Use</h2>
+              <div className="grid grid-cols-1 gap-3 sm:gap-4">
+                {benchmarkData["Tool Use"].map((benchmark) => (
+                  <Chart key={benchmark.name} benchmark={benchmark} animated={animated} />
+                ))}
+              </div>
             </div>
-          </div>
 
-          {/* Math & STEM Section */}
-          <div className="bg-gray-800/30 rounded-lg border border-gray-700 p-3 sm:p-4 md:p-6">
-            <h2 className="text-base sm:text-lg font-semibold text-white mb-4 sm:mb-6">Math & STEM</h2>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
-              {benchmarkData["Math & STEM"].map((benchmark) => (
-                <Chart key={benchmark.name} benchmark={benchmark} animated={animated} />
-              ))}
+            {/* Math & STEM Section */}
+            <div className="bg-gray-800/30 rounded-lg border border-gray-700 p-3 sm:p-4 md:p-6">
+              <h2 className="text-base sm:text-lg font-semibold text-white mb-4 sm:mb-6">Math & STEM</h2>
+              <div className="grid grid-cols-1 gap-3 sm:gap-4">
+                {benchmarkData["Math & STEM"].map((benchmark) => (
+                  <Chart key={benchmark.name} benchmark={benchmark} animated={animated} />
+                ))}
+              </div>
             </div>
           </div>
         </div>
