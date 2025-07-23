@@ -142,7 +142,6 @@ interface ChartProps {
   animated: boolean
 }
 
-// Model image file mapping based on your provided filenames
 const modelImageMap: { [key: string]: string } = {
   "GPT-4 Turbo": "/images/gpt-4 turbo.webp",
   "Claude-3.5 Sonnet": "/images/claude.webp",
@@ -171,7 +170,6 @@ function Chart({ benchmark, animated }: ChartProps) {
     setHoveredBar(null)
   }
 
-  // Function to get shortened model name for mobile
   const getShortName = (model: string) => {
     switch (model) {
       case "GPT-4 Turbo":
@@ -194,10 +192,7 @@ function Chart({ benchmark, animated }: ChartProps) {
   return (
     <div className="bg-gray-800/50 rounded-lg p-3 sm:p-4 border border-gray-700">
       <h3 className="text-xs sm:text-sm font-medium text-gray-200 mb-4 leading-tight">{benchmark.name}</h3>
-
-      {/* Chart area with increased height for better spacing */}
       <div className="relative" style={{ height: `${CHART_HEIGHT + 80}px` }}>
-        {/* Score labels positioned higher up with more space */}
         <div className="absolute top-0 left-0 right-0 flex justify-center gap-2 sm:gap-3 md:gap-4 h-8">
           {models.map((model) => {
             const score = benchmark.scores[model]
@@ -208,14 +203,12 @@ function Chart({ benchmark, animated }: ChartProps) {
             )
           })}
         </div>
-
-        {/* Bars positioned with more space from labels */}
         <div
           className="absolute left-0 right-0 flex justify-center gap-2 sm:gap-3 md:gap-4"
           style={{
             height: `${CHART_HEIGHT}px`,
-            top: "32px", // More space from percentage labels
-            bottom: "48px", // Space for model names
+            top: "32px",
+            bottom: "48px",
           }}
         >
           {models.map((model) => {
@@ -248,19 +241,15 @@ function Chart({ benchmark, animated }: ChartProps) {
             )
           })}
         </div>
-
-        {/* Model images positioned at bottom with proper spacing */}
         <div className="absolute bottom-0 left-0 right-0 flex justify-center gap-2 sm:gap-3 md:gap-4 h-12">
           {models.map((model) => (
             <div key={`${model}-name`} className="flex-1 text-center max-w-[4rem] flex items-center justify-center">
-              {/* Show image on all screens, fallback to short text on error */}
               <img
                 src={modelImageMap[model]}
                 alt={model}
                 className="h-8 w-auto mx-auto"
                 style={{ maxHeight: 32 }}
                 onError={(e) => {
-                  // fallback to text if image fails to load
                   e.currentTarget.style.display = "none"
                   const fallback = e.currentTarget.nextElementSibling as HTMLElement
                   if (fallback) fallback.style.display = "block"
@@ -276,7 +265,6 @@ function Chart({ benchmark, animated }: ChartProps) {
           ))}
         </div>
       </div>
-
       <Tooltip
         model={hoveredBar || ""}
         score={hoveredBar ? benchmark.scores[hoveredBar] : 0}
@@ -296,6 +284,11 @@ export default function AIBenchmarkWidget() {
     return () => clearTimeout(timer)
   }, [])
 
+  // Helper: Separate top 3 and bottom 1 for Agentic and Competitive Coding
+  const agenticBenchmarks = benchmarkData["Agentic and Competitive Coding"]
+  const top3Benchmarks = agenticBenchmarks.slice(0, 3)
+  const bottomBenchmark = agenticBenchmarks[3]
+
   return (
     <div className="min-h-screen bg-slate-900 relative overflow-hidden">
       {/* Dotted grid background */}
@@ -314,10 +307,16 @@ export default function AIBenchmarkWidget() {
             <h2 className="text-base sm:text-lg font-semibold text-white mb-4 sm:mb-6">
               Agentic and Competitive Coding
             </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5 xl:gap-6">
-              {benchmarkData["Agentic and Competitive Coding"].map((benchmark) => (
+            {/* Grid: Top 3 charts on top row, 1 chart on bottom row */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5 xl:gap-6">
+              {top3Benchmarks.map((benchmark) => (
                 <Chart key={benchmark.name} benchmark={benchmark} animated={animated} />
               ))}
+            </div>
+            <div className="mt-4">
+              <div className="grid grid-cols-1">
+                <Chart key={bottomBenchmark.name} benchmark={bottomBenchmark} animated={animated} />
+              </div>
             </div>
           </div>
 
