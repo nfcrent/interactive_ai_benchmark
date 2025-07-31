@@ -1,8 +1,4 @@
-"use client"
-
-import type React from "react"
-
-import { useState, useEffect } from "react"
+import React, { useState, useEffect } from "react"
 
 interface BenchmarkData {
   name: string
@@ -126,11 +122,12 @@ function Tooltip({ model, score, x, y, visible }: TooltipProps) {
 
   return (
     <div
-      className="fixed z-50 bg-gray-900 text-white px-2 py-1 rounded text-sm pointer-events-none border border-gray-700"
+      className="fixed z-50 bg-white text-black px-2 py-1 rounded text-sm pointer-events-none border border-gray-300"
       style={{
         left: x - 50,
         top: y - 40,
         transform: "translateX(-50%)",
+        fontFamily: "'Urbanist', sans-serif",
       }}
     >
       {model}: {score}%
@@ -163,51 +160,33 @@ function Chart({ benchmark, animated }: ChartProps) {
     setHoveredBar(null)
   }
 
-  // Function to get shortened model name for mobile
-  const getShortName = (model: string) => {
-    switch (model) {
-      case "GPT-4 Turbo":
-        return "GPT-4T"
-      case "Claude-3.5 Sonnet":
-        return "Claude"
-      case "Gemini Ultra":
-        return "Gemini"
-      case "LLaMA-3-70B":
-        return "LLaMA"
-      case "GPT-4":
-        return "GPT-4"
-      default:
-        return model
-    }
-  }
-
   const CHART_HEIGHT = 160
 
   return (
-    <div className="bg-gray-800/50 rounded-lg p-3 sm:p-4 border border-gray-700">
-      <h3 className="text-xs sm:text-sm font-medium text-gray-200 mb-4 leading-tight">{benchmark.name}</h3>
+    <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
+      <h3 className="text-sm font-medium text-black mb-4 leading-tight">{benchmark.name}</h3>
 
-      {/* Chart area with increased height for better spacing */}
+      {/* Chart area with fixed height */}
       <div className="relative" style={{ height: `${CHART_HEIGHT + 80}px` }}>
-        {/* Score labels positioned higher up with more space */}
-        <div className="absolute top-0 left-0 right-0 flex justify-center gap-2 sm:gap-3 md:gap-4 h-8">
+        {/* Score labels positioned at top */}
+        <div className="absolute top-0 left-0 right-0 flex justify-center gap-4 h-8">
           {models.map((model) => {
             const score = benchmark.scores[model]
             return (
-              <div key={`${model}-score`} className="flex-1 text-center max-w-[4rem] flex items-center justify-center">
-                <div className="text-xs text-gray-300 font-medium">{score}%</div>
+              <div key={`${model}-score`} className="flex-1 text-center max-w-16 flex items-center justify-center">
+                <div className="text-xs text-black font-medium">{score}%</div>
               </div>
             )
           })}
         </div>
 
-        {/* Bars positioned with more space from labels */}
+        {/* Bars positioned with fixed spacing */}
         <div
-          className="absolute left-0 right-0 flex justify-center gap-2 sm:gap-3 md:gap-4"
+          className="absolute left-0 right-0 flex justify-center gap-4"
           style={{
             height: `${CHART_HEIGHT}px`,
-            top: "32px", // More space from percentage labels
-            bottom: "48px", // Space for model names
+            top: "32px",
+            bottom: "48px",
           }}
         >
           {models.map((model) => {
@@ -219,12 +198,12 @@ function Chart({ benchmark, animated }: ChartProps) {
             return (
               <div
                 key={model}
-                className="flex-1 flex justify-center max-w-[4rem]"
+                className="flex-1 flex justify-center max-w-16"
                 style={{ height: `${CHART_HEIGHT}px` }}
               >
                 <div className="flex items-end">
                   <div
-                    className="w-6 sm:w-8 md:w-10 rounded-t transition-all duration-300 cursor-pointer"
+                    className="w-10 rounded-t transition-all duration-300 cursor-pointer"
                     style={{
                       height: animated ? `${height}px` : "0px",
                       backgroundColor: config.color,
@@ -241,14 +220,11 @@ function Chart({ benchmark, animated }: ChartProps) {
           })}
         </div>
 
-        {/* Model names positioned at bottom with proper spacing */}
-        <div className="absolute bottom-0 left-0 right-0 flex justify-center gap-2 sm:gap-3 md:gap-4 h-12">
+        {/* Model names positioned at bottom */}
+        <div className="absolute bottom-0 left-0 right-0 flex justify-center gap-4 h-12">
           {models.map((model) => (
-            <div key={`${model}-name`} className="flex-1 text-center max-w-[4rem] flex items-center justify-center">
-              <div className="block sm:hidden text-xs text-gray-300 font-medium leading-tight">
-                {getShortName(model)}
-              </div>
-              <div className="hidden sm:block text-xs text-gray-300 font-medium leading-tight">{model}</div>
+            <div key={`${model}-name`} className="flex-1 text-center max-w-16 flex items-center justify-center">
+              <div className="text-xs text-black font-medium leading-tight">{model}</div>
             </div>
           ))}
         </div>
@@ -273,59 +249,67 @@ export default function AIBenchmarkWidget() {
     return () => clearTimeout(timer)
   }, [])
 
+  // Organize benchmarks in the requested layout
+  const topRowBenchmarks = [
+    benchmarkData["Agentic and Competitive Coding"][0], // SWE-bench Verified
+    benchmarkData["Agentic and Competitive Coding"][1], // SWE-bench Multilingual
+    benchmarkData["Agentic and Competitive Coding"][2], // LiveCodeBench v6
+  ]
+
+  const middleRowBenchmarks = [
+    benchmarkData["Agentic and Competitive Coding"][3], // OJBench
+    benchmarkData["Tool Use"][0], // Tau2-bench weighted average
+    benchmarkData["Tool Use"][1], // AceBench(en)
+  ]
+
+  const bottomRowBenchmarks = [
+    benchmarkData["Math & STEM"][0], // AIME 2025
+    benchmarkData["Math & STEM"][1], // GPQA-Diamond
+  ]
+
   return (
-    <div className="min-h-screen bg-slate-900 relative overflow-hidden">
-      {/* Dotted grid background */}
-      <div
-        className="absolute inset-0 opacity-20"
-        style={{
-          backgroundImage: "radial-gradient(circle, #64748b 1px, transparent 1px)",
-          backgroundSize: "20px 20px",
-        }}
-      />
+    <>
+      <style>
+        {`
+          @import url('https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap');
+          * {
+            font-family: 'Urbanist', sans-serif;
+          }
+        `}
+      </style>
+      <div className="relative overflow-hidden" style={{ fontFamily: "'Urbanist', sans-serif", background: 'transparent', width: '100%', minHeight: 'auto' }}>
+        <div className="relative z-10 p-4 max-w-7xl mx-auto">
+          <div className="space-y-6">
+            {/* Top Row - 3 items */}
+            <div className="grid grid-cols-3 gap-4">
+              {topRowBenchmarks.map((benchmark) => (
+                <Chart key={benchmark.name} benchmark={benchmark} animated={animated} />
+              ))}
+            </div>
 
-      <div className="relative z-10 p-3 sm:p-4 md:p-6 max-w-7xl mx-auto">
-        <div className="space-y-4 sm:space-y-6 md:space-y-8">
-          {/* Agentic and Competitive Coding Section */}
-          <div className="bg-gray-800/30 rounded-lg border border-gray-700 p-3 sm:p-4 md:p-6">
-            <h2 className="text-base sm:text-lg font-semibold text-white mb-4 sm:mb-6">
-              Agentic and Competitive Coding
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-4">
-              {benchmarkData["Agentic and Competitive Coding"].map((benchmark) => (
+            {/* Middle Row - 3 items */}
+            <div className="grid grid-cols-3 gap-4">
+              {middleRowBenchmarks.map((benchmark) => (
+                <Chart key={benchmark.name} benchmark={benchmark} animated={animated} />
+              ))}
+            </div>
+
+            {/* Bottom Section - 2 items stacked vertically */}
+            <div className="space-y-4">
+              {bottomRowBenchmarks.map((benchmark) => (
                 <Chart key={benchmark.name} benchmark={benchmark} animated={animated} />
               ))}
             </div>
           </div>
 
-          {/* Tool Use Section */}
-          <div className="bg-gray-800/30 rounded-lg border border-gray-700 p-3 sm:p-4 md:p-6">
-            <h2 className="text-base sm:text-lg font-semibold text-white mb-4 sm:mb-6">Tool Use</h2>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
-              {benchmarkData["Tool Use"].map((benchmark) => (
-                <Chart key={benchmark.name} benchmark={benchmark} animated={animated} />
-              ))}
-            </div>
+          {/* Footer */}
+          <div className="mt-8 text-xs text-black space-y-1 text-center">
+            <p>All models evaluated above are non-thinking models.</p>
+            <p>For Tau2-Bench, average is weighted by tasks.</p>
+            <p>Interactive AI Benchmark Widget • Embeddable anywhere</p>
           </div>
-
-          {/* Math & STEM Section */}
-          <div className="bg-gray-800/30 rounded-lg border border-gray-700 p-3 sm:p-4 md:p-6">
-            <h2 className="text-base sm:text-lg font-semibold text-white mb-4 sm:mb-6">Math & STEM</h2>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
-              {benchmarkData["Math & STEM"].map((benchmark) => (
-                <Chart key={benchmark.name} benchmark={benchmark} animated={animated} />
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Footer */}
-        <div className="mt-6 sm:mt-8 text-xs text-gray-500 space-y-1 text-center sm:text-left">
-          <p>All models evaluated above are non-thinking models.</p>
-          <p>For Tau2-Bench, average is weighted by tasks.</p>
-          <p>Interactive AI Benchmark Widget • Embeddable anywhere</p>
         </div>
       </div>
-    </div>
+    </>
   )
 }
