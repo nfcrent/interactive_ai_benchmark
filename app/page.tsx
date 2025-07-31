@@ -1,6 +1,7 @@
 "use client"
 
 import type React from "react"
+
 import { useState, useEffect } from "react"
 
 interface BenchmarkData {
@@ -20,7 +21,7 @@ const modelConfigs: { [key: string]: ModelConfig } = {
   "Claude-3.5 Sonnet": { name: "Claude-3.5 Sonnet", color: "#6366F1", icon: "C", iconBg: "#F59E0B" },
   "Gemini Ultra": { name: "Gemini Ultra", color: "#8B5CF6", icon: "G", iconBg: "#3B82F6" },
   "LLaMA-3-70B": { name: "LLaMA-3-70B", color: "#A855F7", icon: "L", iconBg: "#3B82F6" },
-  "Grok": { name: "Grok", color: "#F59E0B", icon: "GR", iconBg: "#10B981" },
+  "GPT-4": { name: "GPT-4", color: "#F59E0B", icon: "4", iconBg: "#10B981" },
 }
 
 const benchmarkData = {
@@ -32,7 +33,7 @@ const benchmarkData = {
         "Claude-3.5 Sonnet": 65.8,
         "Gemini Ultra": 38.8,
         "LLaMA-3-70B": 34.4,
-        "Grok": 78.4,
+        "GPT-4": 78.4,
       },
     },
     {
@@ -42,7 +43,7 @@ const benchmarkData = {
         "Claude-3.5 Sonnet": 25.8,
         "Gemini Ultra": 20.9,
         "LLaMA-3-70B": 31.5,
-        "Grok": 72.5,
+        "GPT-4": 72.5,
       },
     },
     {
@@ -52,7 +53,7 @@ const benchmarkData = {
         "Claude-3.5 Sonnet": 51.0,
         "Gemini Ultra": 46.9,
         "LLaMA-3-70B": 37.0,
-        "Grok": 44.7,
+        "GPT-4": 44.7,
       },
     },
     {
@@ -62,7 +63,7 @@ const benchmarkData = {
         "Claude-3.5 Sonnet": 24.0,
         "Gemini Ultra": 11.3,
         "LLaMA-3-70B": 19.5,
-        "Grok": 19.6,
+        "GPT-4": 19.6,
       },
     },
   ],
@@ -74,7 +75,7 @@ const benchmarkData = {
         "Claude-3.5 Sonnet": 48.8,
         "Gemini Ultra": 37.3,
         "LLaMA-3-70B": 54.4,
-        "Grok": 67.6,
+        "GPT-4": 67.6,
       },
     },
     {
@@ -84,7 +85,7 @@ const benchmarkData = {
         "Claude-3.5 Sonnet": 72.7,
         "Gemini Ultra": 70.5,
         "LLaMA-3-70B": 80.1,
-        "Grok": 75.6,
+        "GPT-4": 75.6,
       },
     },
   ],
@@ -96,7 +97,7 @@ const benchmarkData = {
         "Claude-3.5 Sonnet": 46.7,
         "Gemini Ultra": 24.7,
         "LLaMA-3-70B": 37.0,
-        "Grok": 33.9,
+        "GPT-4": 33.9,
       },
     },
     {
@@ -106,7 +107,7 @@ const benchmarkData = {
         "Claude-3.5 Sonnet": 68.4,
         "Gemini Ultra": 62.9,
         "LLaMA-3-70B": 66.3,
-        "Grok": 74.9,
+        "GPT-4": 74.9,
       },
     },
   ],
@@ -142,14 +143,6 @@ interface ChartProps {
   animated: boolean
 }
 
-const modelImageMap: { [key: string]: string } = {
-  "GPT-4 Turbo": "/images/gpt-4 turbo.webp",
-  "Claude-3.5 Sonnet": "/images/claude.webp",
-  "Gemini Ultra": "/images/gemini.png",
-  "LLaMA-3-70B": "/images/llama.png",
-  "Grok": "/images/grok.png",
-}
-
 function Chart({ benchmark, animated }: ChartProps) {
   const [hoveredBar, setHoveredBar] = useState<string | null>(null)
   const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 })
@@ -170,6 +163,7 @@ function Chart({ benchmark, animated }: ChartProps) {
     setHoveredBar(null)
   }
 
+  // Function to get shortened model name for mobile
   const getShortName = (model: string) => {
     switch (model) {
       case "GPT-4 Turbo":
@@ -180,8 +174,8 @@ function Chart({ benchmark, animated }: ChartProps) {
         return "Gemini"
       case "LLaMA-3-70B":
         return "LLaMA"
-      case "Grok":
-        return "Grok"
+      case "GPT-4":
+        return "GPT-4"
       default:
         return model
     }
@@ -192,14 +186,28 @@ function Chart({ benchmark, animated }: ChartProps) {
   return (
     <div className="bg-gray-800/50 rounded-lg p-3 sm:p-4 border border-gray-700">
       <h3 className="text-xs sm:text-sm font-medium text-gray-200 mb-4 leading-tight">{benchmark.name}</h3>
+
+      {/* Chart area with increased height for better spacing */}
       <div className="relative" style={{ height: `${CHART_HEIGHT + 80}px` }}>
-        {/* All bars in a single row, with percentage labels at top of each bar */}
+        {/* Score labels positioned higher up with more space */}
+        <div className="absolute top-0 left-0 right-0 flex justify-center gap-2 sm:gap-3 md:gap-4 h-8">
+          {models.map((model) => {
+            const score = benchmark.scores[model]
+            return (
+              <div key={`${model}-score`} className="flex-1 text-center max-w-[4rem] flex items-center justify-center">
+                <div className="text-xs text-gray-300 font-medium">{score}%</div>
+              </div>
+            )
+          })}
+        </div>
+
+        {/* Bars positioned with more space from labels */}
         <div
-          className="absolute left-0 right-0 flex items-end justify-center gap-2 sm:gap-3 md:gap-4"
+          className="absolute left-0 right-0 flex justify-center gap-2 sm:gap-3 md:gap-4"
           style={{
             height: `${CHART_HEIGHT}px`,
-            top: "32px",
-            bottom: "56px",
+            top: "32px", // More space from percentage labels
+            bottom: "48px", // Space for model names
           }}
         >
           {models.map((model) => {
@@ -211,22 +219,10 @@ function Chart({ benchmark, animated }: ChartProps) {
             return (
               <div
                 key={model}
-                className="flex flex-col items-center max-w-[4rem] w-full relative"
+                className="flex-1 flex justify-center max-w-[4rem]"
                 style={{ height: `${CHART_HEIGHT}px` }}
               >
-                {/* Percentage label above bar, positioned absolutely */}
-                <div
-                  className="text-xs font-semibold absolute left-1/2"
-                  style={{
-                    top: `${CHART_HEIGHT - height - 18}px`,
-                    transform: "translateX(-50%)",
-                    color: "#cbd5e1",
-                    pointerEvents: "none",
-                  }}
-                >
-                  {score}%
-                </div>
-                <div className="flex items-end h-full">
+                <div className="flex items-end">
                   <div
                     className="w-6 sm:w-8 md:w-10 rounded-t transition-all duration-300 cursor-pointer"
                     style={{
@@ -244,31 +240,20 @@ function Chart({ benchmark, animated }: ChartProps) {
             )
           })}
         </div>
-        {/* Model images at the bottom */}
+
+        {/* Model names positioned at bottom with proper spacing */}
         <div className="absolute bottom-0 left-0 right-0 flex justify-center gap-2 sm:gap-3 md:gap-4 h-12">
           {models.map((model) => (
             <div key={`${model}-name`} className="flex-1 text-center max-w-[4rem] flex items-center justify-center">
-              <img
-                src={modelImageMap[model]}
-                alt={model}
-                className="h-8 w-auto mx-auto"
-                style={{ maxHeight: 32 }}
-                onError={(e) => {
-                  e.currentTarget.style.display = "none"
-                  const fallback = e.currentTarget.nextElementSibling as HTMLElement
-                  if (fallback) fallback.style.display = "block"
-                }}
-              />
-              <div
-                className="text-xs text-gray-300 font-medium leading-tight"
-                style={{ display: "none" }}
-              >
+              <div className="block sm:hidden text-xs text-gray-300 font-medium leading-tight">
                 {getShortName(model)}
               </div>
+              <div className="hidden sm:block text-xs text-gray-300 font-medium leading-tight">{model}</div>
             </div>
           ))}
         </div>
       </div>
+
       <Tooltip
         model={hoveredBar || ""}
         score={hoveredBar ? benchmark.scores[hoveredBar] : 0}
@@ -288,11 +273,6 @@ export default function AIBenchmarkWidget() {
     return () => clearTimeout(timer)
   }, [])
 
-  // Helper: Separate top 3 and bottom 1 for Agentic and Competitive Coding
-  const agenticBenchmarks = benchmarkData["Agentic and Competitive Coding"]
-  const top3Benchmarks = agenticBenchmarks.slice(0, 3)
-  const bottomBenchmark = agenticBenchmarks[3]
-
   return (
     <div className="min-h-screen bg-slate-900 relative overflow-hidden">
       {/* Dotted grid background */}
@@ -306,44 +286,35 @@ export default function AIBenchmarkWidget() {
 
       <div className="relative z-10 p-3 sm:p-4 md:p-6 max-w-7xl mx-auto">
         <div className="space-y-4 sm:space-y-6 md:space-y-8">
-          {/* Agentic and Competitive Coding Section (only section bg, no border) */}
-          <div className="p-3 sm:p-4 md:p-6 bg-gray-800/30 rounded-lg">
+          {/* Agentic and Competitive Coding Section */}
+          <div className="bg-gray-800/30 rounded-lg border border-gray-700 p-3 sm:p-4 md:p-6">
             <h2 className="text-base sm:text-lg font-semibold text-white mb-4 sm:mb-6">
               Agentic and Competitive Coding
             </h2>
-            {/* Grid: Top 3 charts on top row, 1 chart on bottom row */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5 xl:gap-6">
-              {top3Benchmarks.map((benchmark) => (
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-4">
+              {benchmarkData["Agentic and Competitive Coding"].map((benchmark) => (
                 <Chart key={benchmark.name} benchmark={benchmark} animated={animated} />
               ))}
             </div>
-            <div className="mt-4">
-              <div className="grid grid-cols-1">
-                <Chart key={bottomBenchmark.name} benchmark={bottomBenchmark} animated={animated} />
-              </div>
+          </div>
+
+          {/* Tool Use Section */}
+          <div className="bg-gray-800/30 rounded-lg border border-gray-700 p-3 sm:p-4 md:p-6">
+            <h2 className="text-base sm:text-lg font-semibold text-white mb-4 sm:mb-6">Tool Use</h2>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
+              {benchmarkData["Tool Use"].map((benchmark) => (
+                <Chart key={benchmark.name} benchmark={benchmark} animated={animated} />
+              ))}
             </div>
           </div>
 
-          {/* Tool Use and Math & STEM Sections SIDE BY SIDE */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            {/* Tool Use Section */}
-            <div className="bg-gray-800/30 rounded-lg p-3 sm:p-4 md:p-6">
-              <h2 className="text-base sm:text-lg font-semibold text-white mb-4 sm:mb-6">Tool Use</h2>
-              <div className="grid grid-cols-1 gap-3 sm:gap-4">
-                {benchmarkData["Tool Use"].map((benchmark) => (
-                  <Chart key={benchmark.name} benchmark={benchmark} animated={animated} />
-                ))}
-              </div>
-            </div>
-
-            {/* Math & STEM Section */}
-            <div className="bg-gray-800/30 rounded-lg p-3 sm:p-4 md:p-6">
-              <h2 className="text-base sm:text-lg font-semibold text-white mb-4 sm:mb-6">Math & STEM</h2>
-              <div className="grid grid-cols-1 gap-3 sm:gap-4">
-                {benchmarkData["Math & STEM"].map((benchmark) => (
-                  <Chart key={benchmark.name} benchmark={benchmark} animated={animated} />
-                ))}
-              </div>
+          {/* Math & STEM Section */}
+          <div className="bg-gray-800/30 rounded-lg border border-gray-700 p-3 sm:p-4 md:p-6">
+            <h2 className="text-base sm:text-lg font-semibold text-white mb-4 sm:mb-6">Math & STEM</h2>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
+              {benchmarkData["Math & STEM"].map((benchmark) => (
+                <Chart key={benchmark.name} benchmark={benchmark} animated={animated} />
+              ))}
             </div>
           </div>
         </div>
