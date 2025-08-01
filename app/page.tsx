@@ -313,11 +313,11 @@ export default function AIBenchmarkWidget() {
           </div>
 
           {/* Footer */}
-          <div className="mt-8 text-xs text-black space-y-1 text-center">
+{/*           <div className="mt-8 text-xs text-black space-y-1 text-center">
             <p>All models evaluated above are non-thinking models.</p>
             <p>For Tau2-Bench, average is weighted by tasks.</p>
             <p>Interactive AI Benchmark Widget • Embeddable anywhere</p>
-          </div>
+          </div> */}
         </div>
       </div>
     </>
