@@ -311,6 +311,7 @@ export default function AIBenchmarkWidget() {
               ))}
             </div>
           </div>
+        </div>
       </div>
     </>
   )
