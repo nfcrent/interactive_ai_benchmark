@@ -12,14 +12,15 @@ interface ModelConfig {
   color: string
   icon: string
   iconBg: string
+  image: string
 }
 
 const modelConfigs: { [key: string]: ModelConfig } = {
-  "GPT-4 Turbo": { name: "GPT-4 Turbo", color: "#3B82F6", icon: "GPT", iconBg: "#10B981" },
-  "Claude-3.5 Sonnet": { name: "Claude-3.5 Sonnet", color: "#6366F1", icon: "C", iconBg: "#F59E0B" },
-  "Gemini Ultra": { name: "Gemini Ultra", color: "#8B5CF6", icon: "G", iconBg: "#3B82F6" },
-  "LLaMA-3-70B": { name: "LLaMA-3-70B", color: "#A855F7", icon: "L", iconBg: "#3B82F6" },
-  "GPT-4": { name: "GPT-4", color: "#F59E0B", icon: "4", iconBg: "#10B981" },
+  "GPT-4 Turbo": { name: "GPT-4 Turbo", color: "#3B82F6", icon: "GPT", iconBg: "#10B981", image: "/images/gpt-4 turbo.webp" },
+  "Claude-3.5 Sonnet": { name: "Claude-3.5 Sonnet", color: "#6366F1", icon: "C", iconBg: "#F59E0B", image: "/images/claude.webp" },
+  "Gemini Ultra": { name: "Gemini Ultra", color: "#8B5CF6", icon: "G", iconBg: "#3B82F6", image: "/images/gemini.png" },
+  "LLaMA-3-70B": { name: "LLaMA-3-70B", color: "#A855F7", icon: "L", iconBg: "#3B82F6", image: "/images/llama.png" },
+  "Grok": { name: "Grok", color: "#F59E0B", icon: "G", iconBg: "#10B981", image: "/images/grok.png" },
 }
 
 const benchmarkData = {
@@ -31,7 +32,7 @@ const benchmarkData = {
         "Claude-3.5 Sonnet": 65.8,
         "Gemini Ultra": 38.8,
         "LLaMA-3-70B": 34.4,
-        "GPT-4": 78.4,
+        "Grok": 78.4,
       },
     },
     {
@@ -41,7 +42,7 @@ const benchmarkData = {
         "Claude-3.5 Sonnet": 25.8,
         "Gemini Ultra": 20.9,
         "LLaMA-3-70B": 31.5,
-        "GPT-4": 72.5,
+        "Grok": 72.5,
       },
     },
     {
@@ -51,7 +52,7 @@ const benchmarkData = {
         "Claude-3.5 Sonnet": 51.0,
         "Gemini Ultra": 46.9,
         "LLaMA-3-70B": 37.0,
-        "GPT-4": 44.7,
+        "Grok": 44.7,
       },
     },
     {
@@ -61,7 +62,7 @@ const benchmarkData = {
         "Claude-3.5 Sonnet": 24.0,
         "Gemini Ultra": 11.3,
         "LLaMA-3-70B": 19.5,
-        "GPT-4": 19.6,
+        "Grok": 19.6,
       },
     },
   ],
@@ -73,7 +74,7 @@ const benchmarkData = {
         "Claude-3.5 Sonnet": 48.8,
         "Gemini Ultra": 37.3,
         "LLaMA-3-70B": 54.4,
-        "GPT-4": 67.6,
+        "Grok": 67.6,
       },
     },
     {
@@ -83,7 +84,7 @@ const benchmarkData = {
         "Claude-3.5 Sonnet": 72.7,
         "Gemini Ultra": 70.5,
         "LLaMA-3-70B": 80.1,
-        "GPT-4": 75.6,
+        "Grok": 75.6,
       },
     },
   ],
@@ -95,7 +96,7 @@ const benchmarkData = {
         "Claude-3.5 Sonnet": 46.7,
         "Gemini Ultra": 24.7,
         "LLaMA-3-70B": 37.0,
-        "GPT-4": 33.9,
+        "Grok": 33.9,
       },
     },
     {
@@ -105,7 +106,7 @@ const benchmarkData = {
         "Claude-3.5 Sonnet": 68.4,
         "Gemini Ultra": 62.9,
         "LLaMA-3-70B": 66.3,
-        "GPT-4": 74.9,
+        "Grok": 74.9,
       },
     },
   ],
@@ -222,13 +223,20 @@ function Chart({ benchmark, animated }: ChartProps) {
           })}
         </div>
 
-        {/* Model names positioned at bottom */}
+        {/* Model images positioned at bottom */}
         <div className="absolute bottom-0 left-0 right-0 flex justify-center gap-4 h-12">
-          {models.map((model) => (
-            <div key={`${model}-name`} className="flex-1 text-center max-w-16 flex items-center justify-center">
-              <div className="text-xs text-black font-medium leading-tight">{model}</div>
-            </div>
-          ))}
+          {models.map((model) => {
+            const config = modelConfigs[model]
+            return (
+              <div key={`${model}-image`} className="flex-1 text-center max-w-16 flex items-center justify-center">
+                <img 
+                  src={config.image} 
+                  alt={model}
+                  className="w-8 h-8 object-contain"
+                />
+              </div>
+            )
+          })}
         </div>
       </div>
 
