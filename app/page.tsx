@@ -172,11 +172,11 @@ function Chart({ benchmark, animated }: ChartProps) {
       {/* Chart area with fixed height */}
       <div className="relative" style={{ height: `${CHART_HEIGHT + 80}px` }}>
         {/* Score labels positioned at top */}
-        <div className="absolute top-0 left-0 right-0 flex justify-center gap-4 h-8">
+        <div className="absolute top-0 left-0 right-0 flex justify-center gap-2 px-2 h-8">
           {models.map((model) => {
             const score = benchmark.scores[model]
             return (
-              <div key={`${model}-score`} className="flex-1 text-center max-w-16 flex items-center justify-center">
+              <div key={`${model}-score`} className="flex-1 text-center flex items-center justify-center min-w-0">
                 <div className="text-xs text-black font-medium">{score}%</div>
               </div>
             )
@@ -185,7 +185,7 @@ function Chart({ benchmark, animated }: ChartProps) {
 
         {/* Bars positioned with fixed spacing */}
         <div
-          className="absolute left-0 right-0 flex justify-center gap-4"
+          className="absolute left-0 right-0 flex justify-center gap-2 px-2"
           style={{
             height: `${CHART_HEIGHT}px`,
             top: "32px",
@@ -201,38 +201,40 @@ function Chart({ benchmark, animated }: ChartProps) {
             return (
               <div
                 key={model}
-                className="flex-1 flex justify-center max-w-16"
-                style={{ height: `${CHART_HEIGHT}px` }}
+                className="flex-1 flex justify-center items-end"
+                style={{ 
+                  height: `${CHART_HEIGHT}px`,
+                  minWidth: 0 // Ensures flex items can shrink
+                }}
               >
-                <div className="flex items-end">
-                  <div
-                    className="w-10 rounded-t transition-all duration-300 cursor-pointer"
-                    style={{
-                      height: animated ? `${height}px` : "0px",
-                      backgroundColor: config.color,
-                      transform: isHovered ? "scale(1.05)" : "scale(1)",
-                      filter: isHovered ? "brightness(1.1)" : "brightness(1)",
-                    }}
-                    onMouseEnter={(e) => handleMouseEnter(model, e)}
-                    onMouseMove={handleMouseMove}
-                    onMouseLeave={handleMouseLeave}
-                  />
-                </div>
+                <div
+                  className="rounded-t transition-all duration-300 cursor-pointer"
+                  style={{
+                    width: "min(32px, calc(100% - 4px))", // Responsive width with max
+                    height: animated ? `${height}px` : "0px",
+                    backgroundColor: config.color,
+                    transform: isHovered ? "scale(1.05)" : "scale(1)",
+                    filter: isHovered ? "brightness(1.1)" : "brightness(1)",
+                  }}
+                  onMouseEnter={(e) => handleMouseEnter(model, e)}
+                  onMouseMove={handleMouseMove}
+                  onMouseLeave={handleMouseLeave}
+                />
               </div>
             )
           })}
         </div>
 
         {/* Model images positioned at bottom */}
-        <div className="absolute bottom-0 left-0 right-0 flex justify-center gap-4 h-12">
+        <div className="absolute bottom-0 left-0 right-0 flex justify-center gap-2 px-2 h-12">
           {models.map((model) => {
             const config = modelConfigs[model]
             return (
-              <div key={`${model}-image`} className="flex-1 text-center max-w-16 flex items-center justify-center">
+              <div key={`${model}-image`} className="flex-1 text-center flex items-center justify-center min-w-0">
                 <img 
                   src={config.image} 
                   alt={model}
-                  className="w-8 h-8 object-contain"
+                  className="w-6 h-6 sm:w-8 sm:h-8 object-contain"
                 />
               </div>
             )
