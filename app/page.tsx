@@ -291,21 +291,21 @@ export default function AIBenchmarkWidget() {
         <div className="relative z-10 p-4 max-w-7xl mx-auto">
           <div className="space-y-6">
             {/* Top Row - 3 items */}
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               {topRowBenchmarks.map((benchmark) => (
                 <Chart key={benchmark.name} benchmark={benchmark} animated={animated} />
               ))}
             </div>
 
             {/* Middle Row - 3 items */}
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               {middleRowBenchmarks.map((benchmark) => (
                 <Chart key={benchmark.name} benchmark={benchmark} animated={animated} />
               ))}
             </div>
 
             {/* Bottom Row - 2 items side by side */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {bottomRowBenchmarks.map((benchmark) => (
                 <Chart key={benchmark.name} benchmark={benchmark} animated={animated} />
               ))}
@@ -313,11 +313,11 @@ export default function AIBenchmarkWidget() {
           </div>
 
           {/* Footer */}
-{/*           <div className="mt-8 text-xs text-black space-y-1 text-center">
+          <div className="mt-8 text-xs text-black space-y-1 text-center">
             <p>All models evaluated above are non-thinking models.</p>
             <p>For Tau2-Bench, average is weighted by tasks.</p>
             <p>Interactive AI Benchmark Widget • Embeddable anywhere</p>
-          </div> */}
+          </div>
         </div>
       </div>
     </>
