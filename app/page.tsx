@@ -125,7 +125,7 @@ function Tooltip({ model, score, x, y, visible }: TooltipProps) {
 
   return (
     <div
-      className="fixed z-50 bg-white text-black px-2 py-1 rounded text-sm pointer-events-none border border-gray-300"
+      className="fixed z-50 bg-white text-black px-2 py-1 rounded text-sm pointer-events-none border border-gray-200"
       style={{
         left: x - 50,
         top: y - 40,
@@ -166,7 +166,7 @@ function Chart({ benchmark, animated }: ChartProps) {
   const CHART_HEIGHT = 160
 
   return (
-    <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
+    <div className="bg-white rounded-lg p-4 border border-gray-100">
       <h3 className="text-sm font-medium text-black mb-4 leading-tight">{benchmark.name}</h3>
 
       {/* Chart area with fixed height */}
@@ -304,8 +304,8 @@ export default function AIBenchmarkWidget() {
               ))}
             </div>
 
-            {/* Bottom Section - 2 items stacked vertically */}
-            <div className="space-y-4">
+            {/* Bottom Row - 2 items side by side */}
+            <div className="grid grid-cols-2 gap-4">
               {bottomRowBenchmarks.map((benchmark) => (
                 <Chart key={benchmark.name} benchmark={benchmark} animated={animated} />
               ))}
