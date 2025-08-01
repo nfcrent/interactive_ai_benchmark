@@ -12,17 +12,12 @@ const nextConfig = {
   async headers() {
     return [
       {
-        // Apply to all routes
-        source: '/(.*)',
+        source: '/:path*',
         headers: [
           {
-            key: 'X-Frame-Options',
-            value: 'ALLOWALL'
-          },
-          {
             key: 'Content-Security-Policy',
-            value: "frame-ancestors *;"
-          }
+            value: 'frame-ancestors *',
+          },
         ],
       },
     ]
